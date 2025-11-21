@@ -50,6 +50,7 @@ async function startAR() {
             
             // Добавляем модель к якорю
             anchor.group.add(model);
+            engineModel = model; // Сохраняем ссылку на модель
             
             statusText.textContent = 'Наведите камеру на маркер';
             console.log('Модель загружена в AR');
@@ -68,8 +69,15 @@ async function startAR() {
     await mindarThree.start();
     statusText.textContent = 'AR активен! Наведите камеру на маркер';
     
+    // Переменная для модели (чтобы было доступно в анимации)
+    let engineModel = null;
+
     // Анимация
     renderer.setAnimationLoop(() => {
+        // Автовращение модели
+        if (engineModel) {
+            engineModel.rotation.y += 0.005; // Вращение по оси Y
+        }
         renderer.render(scene, camera);
     });
 }
