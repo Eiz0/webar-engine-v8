@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MindARThree } from 'mindar-image-three';
 
+// Переменные для управления
+let rotationSpeed = 0.005; // Нормальная скорость
+let currentSpeedMode = 1; // 0 - медленно, 1 - нормально, 2 - быстро
+
 const container = document.getElementById('container');
 const statusText = document.getElementById('status');
 const startButton = document.getElementById('startButton');
@@ -56,8 +60,12 @@ async function startAR() {
             console.log('Модель загружена в AR');
         },
         function(xhr) {
-            const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
-            statusText.textContent = `Загрузка модели: ${percent}%`;
+            if (xhr.lengthComputable && xhr.total > 0) {
+                const percent = Math.min(100, Math.round((xhr.loaded / xhr.total) * 100));
+                statusText.textContent = `Загрузка модели: ${percent}%`;
+            } else {
+                statusText.textContent = `Загрузка модели...`;
+            }
         },
         function(error) {
             console.error('Ошибка загрузки модели:', error);
@@ -67,6 +75,8 @@ async function startAR() {
     
     // Запускаем AR
     await mindarThree.start();
+    // Показываем панель управления
+    document.getElementById('controls').style.display = 'flex';
     statusText.textContent = 'AR активен! Наведите камеру на маркер';
     
     // Переменная для модели (чтобы было доступно в анимации)
@@ -74,9 +84,8 @@ async function startAR() {
 
     // Анимация
     renderer.setAnimationLoop(() => {
-        // Автовращение модели
         if (engineModel) {
-            engineModel.rotation.y += 0.005; // Вращение по оси Y
+            engineModel.rotation.y += rotationSpeed;
         }
         renderer.render(scene, camera);
     });
@@ -86,3 +95,30 @@ async function startAR() {
 statusText.textContent = 'Готово к запуску AR';
 startButton.style.display = 'block';
 startButton.onclick = startAR;
+
+// Обработчики кнопок
+document.getElementById('speedBtn').addEventListener('click', () => {
+    currentSpeedMode = (currentSpeedMode + 1) % 3;
+    const speeds = [0.002, 0.005, 0.01];
+    const labels = ['Медленная', 'Нормальная', 'Быстрая'];
+    rotationSpeed = speeds[currentSpeedMode];
+    document.getElementById('speedBtn').textContent = `⚡ Скорость: ${labels[currentSpeedMode]}`;
+});
+
+document.getElementById('infoBtn').addEventListener('click', () => {
+    document.getElementById('infoPanel').style.display = 'block';
+    document.getElementById('partsPanel').style.display = 'none';
+});
+
+document.getElementById('partsBtn').addEventListener('click', () => {
+    document.getElementById('partsPanel').style.display = 'block';
+    document.getElementById('infoPanel').style.display = 'none';
+});
+
+document.getElementById('closeInfo').addEventListener('click', () => {
+    document.getElementById('infoPanel').style.display = 'none';
+});
+
+document.getElementById('closeParts').addEventListener('click', () => {
+    document.getElementById('partsPanel').style.display = 'none';
+});

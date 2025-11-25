@@ -16,6 +16,34 @@
     <!-- AR Container -->
     <div id="ar-container"></div>
 
+    <!-- Панель управления -->
+    <div id="controls" style="display:none;">
+        <button id="speedBtn" class="control-btn">⚡ Скорость: Нормальная</button>
+        <button id="infoBtn" class="control-btn">ℹ️ Информация о двигателе</button>
+        <button id="partsBtn" class="control-btn">🔧 Детали двигателя</button>
+    </div>
+
+    <!-- Информационная панель -->
+    <div id="infoPanel" style="display:none;">
+        <h3>Двигатель V8</h3>
+        <p>Восьмицилиндровый двигатель внутреннего сгорания с V-образным расположением цилиндров под углом 90°. Обеспечивает высокую мощность и плавную работу.</p>
+        <button id="closeInfo" class="control-btn">✕ Закрыть</button>
+    </div>
+
+    <!-- Панель с деталями -->
+    <div id="partsPanel" style="display:none;">
+        <h3>Основные детали:</h3>
+        <ul>
+            <li><strong>Крышки клапанов</strong> - защита ГРМ</li>
+            <li><strong>Головка блока</strong> - камеры сгорания</li>
+            <li><strong>Блок цилиндров</strong> - основа двигателя</li>
+            <li><strong>Поршни</strong> - преобразование энергии</li>
+            <li><strong>Коленвал</strong> - передача мощности</li>
+            <li><strong>Масляный поддон</strong> - хранение масла</li>
+        </ul>
+        <button id="closeParts" class="control-btn">✕ Закрыть</button>
+    </div>
+
     <!-- Import map для Three.js -->
     <script type="importmap">
     {
